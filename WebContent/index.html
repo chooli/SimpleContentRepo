@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+
+<head>
+	<title>Simple Content Repository</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+
+
+	<script>
+			$(function(){
+
+				$("#save_btn").on('click', function(event) {
+					event.preventDefault();
+
+					answer = buildAnswer();
+					console.log(answer);
+
+					$.ajax({
+					  type: !answer.id ? "PUT" : "POST",
+					  url: "api/answer",
+					  data: JSON.stringify(answer),
+					  dataType: "json",
+					  contentType: "application/json; charset=utf-8",
+					  success: function(response){
+						console.log(response);
+						setTimeout(function(){
+						//refresh list
+						fetchAllAnswers();
+						},2000);
+
+					  },
+					  error: function(response) {
+						console.log(response);
+					  }
+					});
+
+				});
+
+			});
+
+			function buildAnswer(){
+				var answer = {};
+				answer["id"] =  $("#id").val();
+				answer["author"] = $("#author").val();
+				answer["title"] = $("#title").val();
+				answer["colorCode"] = $("#colorCode").val();
+				answer["representedQuestion"] = $("#representedQuestion").val();
+				answer["response"] = $("#response").val();
+
+				return answer;
+			}
+
+			function fetchAllAnswers(){
+				$.ajax({
+					  type: "GET",
+					  url: "api/answer/list",
+					  dataType: "json",
+					  contentType: "application/json; charset=utf-8",
+					  success: function(response){
+						console.log(response);
+						renderAnswersList(response.data);
+					  },
+					  error: function(response) {
+						console.log(response);
+					  }
+					});
+			}
+
+			function renderAnswersList(answers){
+			    $('#answer_f').trigger('reset');
+
+				$("#existing_answers_list").empty();
+				answers.forEach(function(answer){
+					console.log(answer);
+					$("#existing_answers_list").append("<div class=\"di\"><span><a href=\"#\" onclick='javascript:getAnswer(\""+answer.id+"\")'>"+answer.title+"</a></span> <div style='float:right;'><a href=\"#\" onclick='javascript:deleteAnswer(\""+answer.id+"\")'>delete</a></div></div>");
+				});
+			}
+
+			function deleteAnswer(answerId){
+				console.log(answerId);
+				$.ajax({
+					  type: "DELETE",
+					  url: "api/answer/"+answerId,
+					  dataType: "json",
+					  contentType: "application/json; charset=utf-8",
+					  success: function(response){
+						console.log(response);
+						fetchAllAnswers();
+					  },
+					  error: function(response) {
+						console.log(response);
+					  }
+					});
+			}
+
+			function getAnswer(answerId){
+				console.log(answerId);
+				$.ajax({
+					  type: "GET",
+					  url: "api/answer/"+answerId,
+					  dataType: "json",
+					  contentType: "application/json; charset=utf-8",
+					  success: function(response){
+						console.log(response);
+						renderAnswer(response.data);
+					  },
+					  error: function(response) {
+						console.log(response);
+					  }
+					});
+			}
+
+			function renderAnswer(answer){
+				$("#id").val(answer["id"]);
+				$("#author").val(answer["author"]);
+				$("#title").val(answer["title"]);
+				$("#colorCode").val(answer["colorCode"]);
+				$("#representedQuestion").val(answer["representedQuestion"]);
+				$("#response").val(answer["response"]);
+			}
+
+		</script>
+
+</head>
+
+<body>
+
+<div id="basic_wrapper">
+	<div id="main_wrapper">
+
+		<!--  Top main bar -->
+		<div id="center_wrapper">
+			<div id="dynamic_container">&nbsp;</div>
+			<div id="header_panel">
+				<strong>Simple Content Repository - Demo</strong><br/>
+				Created by: Chooli Yip | Date : May 2018
+			</div>
+		</div>
+
+		<div class="di_separator">
+			&nbsp;
+		</div>
+
+		<div id="main_panel">
+
+			<div>
+				<h3>How to use this knowledge base?</h3>
+				<pre>This simple app allows you to maintain an answer for user's question.
+
+For example, you could tell someone you know how to go to Mars. That is the answer's title.
+Then, someone could ask
+	"How could I travel to Mars", "Is it possible to fly to Mars" or "Could I have vacation on Mars", etc.
+These represented questions could help computer to find this answer.</pre>
+
+			</div>
+
+			<div class="di_separator">
+				&nbsp;
+			</div>
+
+			<form id="answer_f">
+				<div>
+					<input type="hidden" id="id" name="id" value=""/>
+
+					<label>Author</label>
+					<input type="text" id="author" name="author" value="" placeholder="*type your name here"/>
+
+					<label>Title</label>
+					<input type="text" id="title" name="title" value="" placeholder="*type answer title"/>
+
+					<label>Color Picker</label>
+					<input type="text" id="colorCode" name="colorCode" value="" placeholder="*type a color code. like #FF0000"/>
+
+					<label>Represented Questions</label>
+					<input type="text" id="representedQuestion" name="representedQuestion" value="" placeholder="*a question represent this answer"/>
+
+					<label>Response</label>
+					<TEXTAREA id="response" name="response" rows="10" cols="30" placeholder="*response body here. Could be plain text or html"></TEXTAREA>
+
+					<div class="di">
+						&nbsp;
+					</div>
+
+					<input id="save_btn" type="submit"/>
+				</div>
+
+			</form>
+
+			<div class="di_separator">
+				&nbsp;
+			</div>
+
+			<div id="existing_answers_list">
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+</div>
+
+</body>
+
+</html>

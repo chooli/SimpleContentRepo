@@ -1,0 +1,72 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'war'
+
+group = 'SimpleContentRepo'
+version = '0.0.1'
+
+description = "a simple content repo for testing purpose"
+
+
+buildscript {
+    repositories {
+        maven {
+            url "http://repo.maven.apache.org/maven2"
+        }
+    }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+    maven { url "http://repo.maven.apache.org/maven2" }    
+}
+
+
+configurations.all {
+  resolutionStrategy {  
+    eachDependency { DependencyResolveDetails details ->
+      if (details.requested.group == 'org.springframework') {
+        details.useVersion "5.0.5.RELEASE"
+      }
+    }
+  }
+}
+
+dependencies {
+    compile 'javax.servlet:servlet-api:2.5'
+	compile 'org.springframework:spring-context-support:5.0.5.RELEASE'
+	compile 'org.springframework:spring-webmvc:5.0.5.RELEASE'	
+	
+	compile 'org.springframework.data:spring-data-elasticsearch:3.0.6.RELEASE'
+
+    compile 'org.apache.logging.log4j:log4j-core:2.11.0'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.springframework:spring-test:5.0.5.RELEASE'
+    testCompile 'org.mockito:mockito-all:1.10.19'
+}
+
+war {
+
+    from 'WebContent'
+
+    rootSpec.exclude(".idea/**")
+
+    archiveName 'simplecontentrepo.war'
+
+    manifest {
+        attributes(
+                'Specification-Title': project.name,
+                'Specification-Version':"0.0.1",
+                'Specification-Vendor':"Chooli Yip",
+                'Implementation-Title': project.name,
+                'Implementation-Version':'${BUILD_TAG}',
+                'Implementation-Vendor':"Chooli Yip",
+                'Bundle-Date':new java.util.Date().toString(),
+                'Bundle-Version':new java.util.Date().toString()
+        )}
+}
