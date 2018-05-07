@@ -26,17 +26,29 @@ Type the command below
    <code>gradle clean build</code>
    
    Once you finish the build, you should see the following job are done without error
+   
    :clean
+   
    :compileJava
+   
    :processResources
+   
    :classes
+   
    :war
+   
    :assemble
+   
    :compileTestJava
+   
    :processTestResources NO-SOURCE
+   
    :testClasses
+   
    :test
+   
    :check
+   
    :build
   
   It means it build successfully and passed all test cases
