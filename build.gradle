@@ -2,8 +2,8 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'war'
 
-group = 'SimpleContentRepo'
-version = '0.0.1'
+group = 'media-server'
+version = '0.9.0'
 
 description = "a simple content repo for testing purpose"
 
@@ -56,16 +56,16 @@ war {
 
     rootSpec.exclude(".idea/**")
 
-    archiveName 'simplecontentrepo.war'
+    archiveName 'media-server.war'
 
     manifest {
         attributes(
                 'Specification-Title': project.name,
-                'Specification-Version':"0.0.1",
-                'Specification-Vendor':"Chooli Yip",
+                'Specification-Version': project.version,
+                'Specification-Vendor':"Jumkid Innovation",
                 'Implementation-Title': project.name,
                 'Implementation-Version':'${BUILD_TAG}',
-                'Implementation-Vendor':"Chooli Yip",
+                'Implementation-Vendor':"Jumkid Innovation",
                 'Bundle-Date':new java.util.Date().toString(),
                 'Bundle-Version':new java.util.Date().toString()
         )}
