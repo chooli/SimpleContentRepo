@@ -32,9 +32,9 @@ Please install jdk 1.8 on your local machine. And type to following command to v
 3. Build the project
    Got to the project home path in a terminal
    
-   <code>cd c:/git/SimpleContentRepo</code>
+   <code>cd c:/git/media-server</code>
    
-   <code>gradle clean build</code>
+   <code>gradle clean bootJar</code>
    
    Once you finish the build, you should see the following job are done without error
    
@@ -64,13 +64,13 @@ Please install jdk 1.8 on your local machine. And type to following command to v
   
   It means it build successfully and passed all test cases
     
-  4.Copy the simplecontentrepo.war file from build folder to tomcat webapps folder on your local machine. 
+  4.Start microservices by typing the following command. 
    
-    Start the tomcat server
+    java -jar build/libs/media-server-0.9.0.jar
     
   5. Open a web browser and access the following link
   
-     http://localhost:8080/simplecontentrepo/index.html
+     http://localhost:10080/media/index.html
      
      From there, you could see a simple introduction and how to use it.
 
