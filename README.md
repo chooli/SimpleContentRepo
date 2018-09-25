@@ -2,12 +2,12 @@
 a simple media server provides media streaming resources and services
 
 # Get Start
-Please clone or download this project to your local. Say C:/git/SimpleContenRepo
+Please clone or download this project to your local. Say C:/git/media-server
 Type the command below
 
 <code>cd c:/git</code>
 
-<code>git clone https://github.com/chooli/SimpleContentRepo.git</code>
+<code>git clone https://github.com/chooli/media-server.git</code>
 
 # Prerequisites 
 Please install jdk 1.8 on your local machine. And type to following command to verify it
