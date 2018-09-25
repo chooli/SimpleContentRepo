@@ -1,20 +1,11 @@
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'war'
+plugins {
+    id "org.springframework.boot" version "2.0.4.RELEASE"
+    id "java"
+}
 
 group = 'media-server'
 version = '0.9.0'
-
-description = "a simple content repo for testing purpose"
-
-
-buildscript {
-    repositories {
-        maven {
-            url "http://repo.maven.apache.org/maven2"
-        }
-    }
-}
+description = "Media server provides media streaming resources and services"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -26,45 +17,34 @@ repositories {
 }
 
 
-configurations.all {
-  resolutionStrategy {  
-    eachDependency { DependencyResolveDetails details ->
-      if (details.requested.group == 'org.springframework') {
-        details.useVersion "5.0.5.RELEASE"
-      }
-    }
-  }
+configurations {
+
+    compile.exclude module: "spring-boot-starter-tomcat"
+
 }
 
 dependencies {
-    compile 'javax.servlet:servlet-api:2.5'
-	compile 'org.springframework:spring-context-support:5.0.5.RELEASE'
-	compile 'org.springframework:spring-webmvc:5.0.5.RELEASE'	
-	
-	compile 'org.springframework.data:spring-data-elasticsearch:3.0.6.RELEASE'
+    compile 'org.elasticsearch.client:transport:5.0.0'
+    compile 'org.springframework.data:spring-data-elasticsearch:3.0.6.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-web:2.0.4.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-data-elasticsearch:2.0.5.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-jetty:2.0.5.RELEASE'
 
-    compile 'org.apache.logging.log4j:log4j-core:2.11.0'
+    // https://mvnrepository.com/artifact/net.coobird/thumbnailator
+    compile 'net.coobird:thumbnailator:0.4.8'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.springframework:spring-test:5.0.5.RELEASE'
     testCompile 'org.mockito:mockito-all:1.10.19'
 }
 
-war {
-
-    from 'WebContent'
-
-    rootSpec.exclude(".idea/**")
-
-    archiveName 'media-server.war'
+bootJar {
+    mainClassName = 'com.jumkid.media.Application'
 
     manifest {
         attributes(
-                'Specification-Title': project.name,
-                'Specification-Version': project.version,
-                'Specification-Vendor':"Jumkid Innovation",
                 'Implementation-Title': project.name,
-                'Implementation-Version':'${BUILD_TAG}',
+                'Implementation-Version':version,
                 'Implementation-Vendor':"Jumkid Innovation",
                 'Bundle-Date':new java.util.Date().toString(),
                 'Bundle-Version':new java.util.Date().toString()
