@@ -1,5 +1,5 @@
 # Media Server
-a simple test project for web content repository
+a simple media server provides media streaming resources and services
 
 # Get Start
 Please clone or download this project to your local. Say C:/git/SimpleContenRepo
