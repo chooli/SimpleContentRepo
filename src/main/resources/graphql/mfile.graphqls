@@ -1,0 +1,15 @@
+type MFile {
+    id: ID!
+    filename: String
+    title: String
+    mimeType: String
+    size: Long
+    createdDate: Date
+    createdBy: String
+    content: String
+    logicalPath: String
+}
+
+type Query {
+
+}

@@ -29,6 +29,9 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web:2.0.4.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-data-elasticsearch:2.0.5.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-jetty:2.0.5.RELEASE'
+    compile 'com.graphql-java:graphql-spring-boot-starter:5.0.2'
+    compile 'com.graphql-java:graphql-java-tools:5.2.4'
+
 
     // https://mvnrepository.com/artifact/net.coobird/thumbnailator
     compile 'net.coobird:thumbnailator:0.4.8'
