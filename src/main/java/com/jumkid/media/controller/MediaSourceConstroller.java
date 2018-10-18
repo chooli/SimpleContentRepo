@@ -1,8 +1,8 @@
 package com.jumkid.media.controller;
 
+import com.jumkid.media.exception.MediaStoreServiceException;
 import com.jumkid.media.model.MediaFile;
 import com.jumkid.media.service.MediaFileService;
-import com.jumkid.media.service.ServiceCommand;
 import com.jumkid.media.util.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,28 @@ public class MediaSourceConstroller {
         return response;
     }
 
-    @GetMapping("/{id}")
+    @PutMapping("save")
+    @ResponseBody
+    public Response saveContent(@RequestParam("title") String title, @RequestParam("author") String author,
+                                @RequestParam("content") String content){
+        Response response = new Response();
+        //create mfile object
+        MediaFile mfile = new MediaFile();
+        mfile.setTitle(title);
+        mfile.setCreatedBy(author);
+        mfile.setContent(content);
+        mfile.setMimeType("text/html");
+        try{
+            mfile = fileService.saveMediaFile(mfile, null);
+            response.setData(mfile);
+        } catch (MediaStoreServiceException e) {
+            response.addError("Failed to save content");
+        }
+
+        return response;
+    }
+
+    @GetMapping("/info/{id}")
     @ResponseBody
     public Response getMedia(@PathVariable("id") String id){
         Response response = new Response();
@@ -67,6 +88,22 @@ public class MediaSourceConstroller {
         Response response = new Response();
 
         Page<MediaFile> page = fileService.searchFile(keyword, start, limit);
+        response.setData(page.getContent());
+        response.setTotal(page.getTotalElements());
+
+        return response;
+    }
+
+    @GetMapping("/all")
+    @ResponseBody
+    public Response getAllMedia(@RequestParam("start") Integer start,
+                                @RequestParam("limit") Integer limit){
+        Response response = new Response();
+
+        Integer _start = (start == null ? 0 : start);
+        Integer _limit = (limit == null ? 20 : limit);
+
+        Page<MediaFile> page = fileService.getAllFiles(_start, _limit);
         response.setData(page.getContent());
         response.setTotal(page.getTotalElements());
 

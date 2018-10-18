@@ -55,6 +55,16 @@ public interface MediaFileService {
      * @throws MediaStoreServiceException
      */
     Page<MediaFile> searchFile(String keyword, Integer start, Integer limit) throws MediaStoreServiceException;
+
+    /**
+     * Get all files with pagination
+     *
+     * @param start
+     * @param limit
+     * @return
+     * @throws MediaStoreServiceException
+     */
+    Page<MediaFile> getAllFiles(Integer start, Integer limit) throws MediaStoreServiceException;
     
     MediaFile transformRequestToMediaFile(MultipartFile file, HttpServletRequest request);
     

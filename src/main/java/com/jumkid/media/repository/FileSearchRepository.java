@@ -29,4 +29,13 @@ public interface FileSearchRepository extends ElasticsearchRepository<MediaFile,
      */
     Page<MediaFile> findByFilenameContainingAndModule(String keyword, String module, Pageable pager);
 
+    /**
+     * fetch all files
+     *
+     * @param module
+     * @param pager
+     * @return
+     */
+    Page<MediaFile> findByModule(String module, Pageable pager);
+
 }

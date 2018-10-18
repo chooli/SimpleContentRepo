@@ -71,24 +71,36 @@ public class MediaFileServiceImpl extends AbstractCommonService implements Media
 	@Override
 	public MediaFile getMediaFile(String id) throws MediaStoreServiceException {
     	logger.debug("Retrieve media file by given id ", id);
+
 		Optional<MediaFile> opt = fileSearch.findById(id);
-		if (opt==null) throw new MediaStoreServiceException("No media file is found by id");
+		if (!opt.isPresent()) throw new MediaStoreServiceException("No media file is found by id");
 		return opt.get();
 	}
 
     @Override
 	public Page<MediaFile> searchFile(String keyword, Integer start, Integer limit) throws MediaStoreServiceException {
         logger.debug("Search file by keyword [", keyword, "]");
+
         Page<MediaFile> page = null;
         Pageable pager = PageRequest.of(start, limit);
 
         if(keyword!=null && !keyword.isEmpty()){
             page = fileSearch.findByFilenameContainingAndModule(keyword, Constants.MODULE_FILE, pager);
-
         }
 
         return page;
     }
+
+	@Override
+	public Page<MediaFile> getAllFiles(Integer start, Integer limit) throws MediaStoreServiceException {
+		logger.debug("Get all files");
+
+		Page<MediaFile> page = null;
+		Pageable pager = PageRequest.of(start, limit);
+		page = fileSearch.findByModule(Constants.MODULE_FILE, pager);
+
+		return page;
+	}
 
 	/**
 	 * 
@@ -185,18 +197,6 @@ public class MediaFileServiceImpl extends AbstractCommonService implements Media
 
 				}
 
-			}else
-			if(isAction(cmd,"list")){
-				String[] uuids = (String[])cmd.getParams().get("uuids");
-
-				ArrayList<MediaFile> mfiles = new ArrayList<MediaFile>();
-				for(String uuid : uuids){
-                    Optional<MediaFile> opt = fileSearch.findById(uuid);
-					MediaFile mfile = opt.get();
-					mfiles.add(mfile);
-				}
-
-				cmd.getResults().put("mfiles", mfiles);
 			}
         	
         } catch (Exception e) {

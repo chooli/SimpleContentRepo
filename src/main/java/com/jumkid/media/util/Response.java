@@ -1,6 +1,7 @@
 package com.jumkid.media.util;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Response {
 
@@ -8,7 +9,7 @@ public class Response {
 
     Long total = 0L;
 
-    ArrayList<String> errors;
+    List<String> errors;
 
     Object data;
 
@@ -39,11 +40,11 @@ public class Response {
         errors.add(error);
     }
 
-    public ArrayList<String> getErrors() {
+    public List<String> getErrors() {
         return errors;
     }
 
-    public void setErrors(ArrayList<String> errors) {
+    public void setErrors(List<String> errors) {
         this.errors = errors;
     }
 
