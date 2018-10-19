@@ -4,6 +4,7 @@ import com.jumkid.media.exception.MediaStoreServiceException;
 import com.jumkid.media.model.MediaFile;
 import com.jumkid.media.service.MediaFileService;
 import com.jumkid.media.util.Response;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,9 @@ import java.io.IOException;
  **/
 @RestController
 @RequestMapping("/media")
-public class MediaSourceConstroller {
+public class MediaSourceController {
 
-    public static final Logger logger = LoggerFactory.getLogger(MediaSourceConstroller.class);
+    public static final Logger logger = LoggerFactory.getLogger(MediaSourceController.class);
 
     @Autowired
     private MediaFileService fileService;
@@ -37,9 +38,7 @@ public class MediaSourceConstroller {
         MediaFile mfile = fileService.transformRequestToMediaFile(file, request);
         try {
             byte[] _file = file.getBytes();
-
             mfile = fileService.saveMediaFile(mfile, _file);
-
             response.setData(mfile);
             response.setTotal(1L);
         } catch (IOException ioe) {
@@ -55,14 +54,24 @@ public class MediaSourceConstroller {
     public Response saveContent(@RequestParam("title") String title, @RequestParam("author") String author,
                                 @RequestParam("content") String content){
         Response response = new Response();
+        //validate content creation
+        if(content==null || content.trim().length()==0){
+            response.setSuccess(false);
+            response.addError("The input content is empty!");
+            return response;
+        }
+
         //create mfile object
         MediaFile mfile = new MediaFile();
         mfile.setTitle(title);
         mfile.setCreatedBy(author);
-        mfile.setContent(content);
+
+        //Extract plain text content and set for fulltext search
+        mfile.setContent(Jsoup.parse(content).text());
+
         mfile.setMimeType("text/html");
         try{
-            mfile = fileService.saveMediaFile(mfile, null);
+            mfile = fileService.saveMediaFile(mfile, content.getBytes());
             response.setData(mfile);
         } catch (MediaStoreServiceException e) {
             response.addError("Failed to save content");

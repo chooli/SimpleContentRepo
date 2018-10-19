@@ -7,6 +7,8 @@ import com.jumkid.media.exception.MediaStoreServiceException;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.channels.FileChannel;
+
 /* 
  * This software is written by SocialStudio and subject
  * to a contract between SocialStudio and its customer.
@@ -44,6 +46,15 @@ public interface MediaFileService {
      * @throws MediaStoreServiceException
      */
     MediaFile getMediaFile(String id) throws MediaStoreServiceException;
+
+    /**
+     * Retrieve media file source output by id
+     *
+     * @param mfile
+     * @return
+     * @throws MediaStoreServiceException
+     */
+    FileChannel getSourceFile(String id) throws MediaStoreServiceException;
 
     /**
      * Search file by given keyword

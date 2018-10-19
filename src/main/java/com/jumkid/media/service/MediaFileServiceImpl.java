@@ -78,6 +78,21 @@ public class MediaFileServiceImpl extends AbstractCommonService implements Media
 	}
 
     @Override
+    public FileChannel getSourceFile(String id) throws MediaStoreServiceException {
+        logger.debug("Retrieve source file by given id ", id);
+
+        Optional<MediaFile> opt = fileSearch.findById(id);
+        if (!opt.isPresent()) throw new MediaStoreServiceException("No media file is found by id");
+        MediaFile mfile = opt.get();
+        Boolean isRandomAccess = (mfile.getMimeType().startsWith("video") ||
+                mfile.getMimeType().startsWith("audio"))
+                ? true : false;
+        FileChannel fc = isRandomAccess ? fileStorage.getRandomAccessFile(mfile) : fileStorage.getFile(mfile);
+
+        return fc;
+    }
+
+    @Override
 	public Page<MediaFile> searchFile(String keyword, Integer start, Integer limit) throws MediaStoreServiceException {
         logger.debug("Search file by keyword [", keyword, "]");
 
