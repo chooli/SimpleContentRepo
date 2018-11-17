@@ -1,12 +1,13 @@
 package com.jumkid.media.model;
 
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+import graphql.annotations.GraphQLDescription;
+import graphql.annotations.GraphQLField;
+import graphql.annotations.GraphQLName;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /* 
@@ -25,6 +26,9 @@ import java.util.Date;
  * 
  *
  */
+
+@GraphQLName("media file")
+@GraphQLDescription("media file object containing all fields of media resource")
 @Document(indexName = "mfile", type="mediafiles")
 public class MediaFile {
 
@@ -65,7 +69,8 @@ public class MediaFile {
 	public MediaFile(String id){
 		this.id = id;
 	}
-	
+
+    @GraphQLField
 	public String getId() {
 		return id;
 	}
@@ -74,6 +79,7 @@ public class MediaFile {
 		this.id = id;
 	}
 
+    @GraphQLField
 	public String getMimeType() {
 		return mimeType;
 	}
@@ -82,6 +88,7 @@ public class MediaFile {
 		this.mimeType = mimeType;
 	}
 
+    @GraphQLField
 	public String getContent() {
 		return content;
 	}
@@ -105,7 +112,8 @@ public class MediaFile {
 	public void setModule(String module) {
 		this.module = module;
 	}
-	
+
+    @GraphQLField
 	public Date getCreatedDate() {
 		return this.createdDate;
 	}
@@ -113,8 +121,8 @@ public class MediaFile {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-	
 
+    @GraphQLField
 	public String getFilename() {
 		return filename;
 	}
@@ -123,6 +131,7 @@ public class MediaFile {
 		this.filename = filename;
 	}
 
+    @GraphQLField
 	public String getTitle() {
 		return title;
 	}
@@ -139,6 +148,7 @@ public class MediaFile {
 		this.activated = activated;
 	}
 
+    @GraphQLField
 	public Long getSize() {
 		return size;
 	}
@@ -147,6 +157,7 @@ public class MediaFile {
 		this.size = size;
 	}
 
+    @GraphQLField
 	public String getCreatedBy() {
 		return this.createdBy;
 	}

@@ -1,15 +1,18 @@
+schema {
+    query: Query
+}
+
 type MFile {
     id: ID!
     filename: String
     title: String
     mimeType: String
     size: Long
-    createdDate: Date
+    createdDate: String
     createdBy: String
     content: String
-    logicalPath: String
 }
 
 type Query {
-
+    mfileById(id: ID!): MFile
 }
