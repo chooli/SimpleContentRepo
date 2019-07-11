@@ -1,16 +1,6 @@
 package com.jumkid.media.model;
 
-import graphql.annotations.GraphQLDescription;
-import graphql.annotations.GraphQLField;
-import graphql.annotations.GraphQLName;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
-
-import java.util.Date;
-
-/* 
+/*
  * This software is written by Jumkid and subject
  * to a contract between Jumkid and its customer.
  *
@@ -23,78 +13,108 @@ import java.util.Date;
  * VERSION   | DATE      | DEVELOPER  | DESC
  * -----------------------------------------------------------------
  * 3.0        Dec2013      chooli      creation
- * 
+ *
  *
  */
 
-@GraphQLName("media file")
-@GraphQLDescription("media file object containing all fields of media resource")
-@Document(indexName = "mfile", type="mediafiles")
+import com.jumkid.media.util.Constants;
+
+import java.util.Date;
+
 public class MediaFile {
 
-	@Id
-	@Field(type = FieldType.Keyword)
+	public enum Fields {
+		ID("id"), 
+		TITLE("title"),
+		FILENAME("filename"), 
+		MIMETYPE("mimeType"),
+		SIZE("size"),
+		MODULE("module"),
+		CREATED_DATE("createdDate"),
+		CREATED_BY("createdBy"),
+		CONTENT("content"),
+		ACTIVATED("activated"),
+		BLOB("blob");
+
+		private final String value;
+
+		Fields(String value) { this.value = value; }
+
+		public String value() { return this.value; }
+
+	}
+
 	private String id;
 
-	protected String filename;
+	private String filename;
+
+	private String mimeType;
 	
-	protected String mimeType;
-	
-	@Field(type = FieldType.Long, store = true)
-	protected Long size;
-	
-	protected String module;
+	private Integer size;
+
+	private String module;
 		
-	@Field(type = FieldType.Date, store = true)
-	protected Date createdDate;
+	private Date createdDate;
+
+	private String createdBy;
+
+	private String title;
+
+	private String content;
+
+	private Boolean activated;
+
+	private String logicalPath;
 	
-	protected String createdBy;
-	
-	protected String title;
-	
-	protected String content;
-	
-	protected String logicalPath;
-	
-	@Field(type = FieldType.Boolean)
-	protected Boolean activated = false;
-	
-	protected String[] shareUsers;
-	
-	
-	public MediaFile(){
-		//void
-	}
-	
-	public MediaFile(String id){
-		this.id = id;
+	private MediaFile(Builder builder){
+		this.id = builder.id;
+		this.filename = builder.filename;
+		this.title = builder.title;
+		this.module = builder.module;
+		this.size = builder.size;
+		this.mimeType = builder.mimeType;
+		this.createdDate = builder.createdDate;
+		this.createdBy = builder.createdBy;
+		this.content = builder.content;
+		this.activated = builder.activated;
 	}
 
-    @GraphQLField
+	public void setId(String id) { this.id = id; }
+
 	public String getId() {
 		return id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
-    @GraphQLField
 	public String getMimeType() {
 		return mimeType;
 	}
 
-	public void setMimeType(String mimeType) {
-		this.mimeType = mimeType;
-	}
-
-    @GraphQLField
 	public String getContent() {
 		return content;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public String getModule() {
+		return module;
+	}
+
+	public Date getCreatedDate() {
+		return this.createdDate;
+	}
+
+	public String getFilename() { return filename; }
+
+	public String getTitle() {
+		return title;
+	}
+
+	public Boolean isActivated() { return activated; }
+
+	public Integer getSize() {
+		return size;
+	}
+
+	public String getCreatedBy() {
+		return this.createdBy;
 	}
 
 	public String getLogicalPath() {
@@ -105,73 +125,31 @@ public class MediaFile {
 		this.logicalPath = logicalPath;
 	}
 
-	public String getModule() {
-		return module;
-	}
+	public static class Builder{
 
-	public void setModule(String module) {
-		this.module = module;
-	}
+		private String id;
+		private String filename;
+		private String mimeType;
+		private Integer size;
+		private String module = Constants.MODULE_MFILE;
+		private Date createdDate = new Date();
+		private String createdBy;
+		private String title;
+		private String content;
+		private Boolean activated = Boolean.TRUE;
 
-    @GraphQLField
-	public Date getCreatedDate() {
-		return this.createdDate;
-	}
+		public MediaFile build() { return new MediaFile(this); }
 
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
+		public Builder id(String val) { id = val; return this; }
+		public Builder filename(String val) { filename = val; return this; }
+		public Builder mimeType(String val) { mimeType = val; return this; }
+		public Builder size(Integer val) { size = val; return this; }
+		public Builder module(String val) { module = val == null ? module : val; return this; }
+		public Builder createdDate(Date val) { createdDate = val == null ? createdDate : val; return this; }
+		public Builder createdBy(String val) { createdBy = val; return this; }
+		public Builder title(String val) { title = val; return this; }
+		public Builder content(String val) { content = val; return this; }
+		public Builder activated(Boolean val) { activated = val == null ? activated : val; return this; }
 
-    @GraphQLField
-	public String getFilename() {
-		return filename;
 	}
-
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
-
-    @GraphQLField
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public Boolean isActivated() {
-		return activated;
-	}
-
-	public void setActivated(Boolean activated) {
-		this.activated = activated;
-	}
-
-    @GraphQLField
-	public Long getSize() {
-		return size;
-	}
-
-	public void setSize(Long size) {
-		this.size = size;
-	}
-
-    @GraphQLField
-	public String getCreatedBy() {
-		return this.createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public String[] getShareUsers() {
-		return shareUsers;
-	}
-
-	public void setShareUsers(String[] shareUsers) {
-		this.shareUsers = shareUsers;
-	}
-
 }

@@ -1,6 +1,18 @@
-package com.jumkid.media.controller;
+package com.jumkid.media.api;
 
-import com.jumkid.media.Application;
+/*
+ * This software is written by Jumkid and subject
+ * to a contract between Jumkid and its customer.
+ *
+ * This software stays property of Jumkid unless differing
+ * arrangements between Jumkid and its customer apply.
+ *
+ *
+ * (c)2019 Jumkid All rights reserved.
+ *
+ */
+
+
 import com.jumkid.media.model.AppInfo;
 import com.jumkid.media.util.Response;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,18 +32,24 @@ public class ApplicationController {
     @Value("${spring.application.name}")
     String appName;
 
+    @Value("${spring.application.version}")
+    String appVersion;
+
+    @Value("${spring.application.api}")
+    String appApi;
+
     @GetMapping
     @ResponseBody
     public Response appInfo(){
         AppInfo appInfo = new AppInfo();
         //set info
         appInfo.setName(appName);
-        appInfo.setVersion(Application.class.getPackage().getImplementationVersion());
+        appInfo.setVersion(appVersion);
         appInfo.setDescription("Media server provides media streaming resources and services");
+        appInfo.setApi(appApi);
 
-        Response response = this.buildResponse(true, appInfo);
+        return this.buildResponse(true, appInfo);
 
-        return response;
     }
 
     /**

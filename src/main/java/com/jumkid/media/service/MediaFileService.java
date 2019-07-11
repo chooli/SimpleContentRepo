@@ -1,42 +1,30 @@
 package com.jumkid.media.service;
 
-import javax.servlet.http.HttpServletRequest;
-
-import com.jumkid.media.model.MediaFile;
-import com.jumkid.media.exception.MediaStoreServiceException;
-import org.springframework.data.domain.Page;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.nio.channels.FileChannel;
-
-/* 
- * This software is written by SocialStudio and subject
- * to a contract between SocialStudio and its customer.
+/*
+ * This software is written by Jumkid and subject
+ * to a contract between Jumkid and its customer.
  *
- * This software stays property of SocialStudio unless differing
- * arrangements between SocialStudio and its customer apply.
- *
- *
- * (c)2013 SocialStudio All rights reserved.
- *
- * VERSION   | DATE      | DEVELOPER  | DESC
- * -----------------------------------------------------------------
- * 1.0        Dec2013      chooli      creation
- * 
+ * This software stays property of Jumkid unless differing
+ * arrangements between Jumkid and its customer apply.
  *
  */
+import com.jumkid.media.model.MediaFile;
+import com.jumkid.media.exception.MediaStoreServiceException;
+
+import java.nio.channels.FileChannel;
+import java.util.Optional;
 
 public interface MediaFileService {
 
     /**
-     * Save mediafile and binary
+     * Save media file and binary
      *
-     * @param mfile
+     * @param mFile
      * @param file
      * @return
      * @throws MediaStoreServiceException
      */
-    MediaFile saveMediaFile(MediaFile mfile, byte[] file) throws MediaStoreServiceException;
+    MediaFile saveMediaFile(MediaFile mFile, byte[] file);
 
     /**
      * Retrieve media file by id
@@ -45,38 +33,21 @@ public interface MediaFileService {
      * @return
      * @throws MediaStoreServiceException
      */
-    MediaFile getMediaFile(String id) throws MediaStoreServiceException;
+    MediaFile getMediaFile(String id);
 
     /**
-     * Retrieve media file source output by id
+     * Retrieve media file source by id
      *
-     * @param mfile
-     * @return
+     * @param id media file identity
+     * @return FileChannel
      * @throws MediaStoreServiceException
      */
-    FileChannel getSourceFile(String id) throws MediaStoreServiceException;
+    Optional<FileChannel> getSourceFile(String id);
 
     /**
-     * Search file by given keyword
      *
-     * @param keyword
-     * @param start
-     * @param limit
-     * @return
-     * @throws MediaStoreServiceException
+     * @param id media file identity
      */
-    Page<MediaFile> searchFile(String keyword, Integer start, Integer limit) throws MediaStoreServiceException;
+    boolean deleteMediaFile(String id);
 
-    /**
-     * Get all files with pagination
-     *
-     * @param start
-     * @param limit
-     * @return
-     * @throws MediaStoreServiceException
-     */
-    Page<MediaFile> getAllFiles(Integer start, Integer limit) throws MediaStoreServiceException;
-    
-    MediaFile transformRequestToMediaFile(MultipartFile file, HttpServletRequest request);
-    
 }

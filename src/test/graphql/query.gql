@@ -1,0 +1,52 @@
+query getMFile($id: ID!){
+  mfileById(id: $id) {
+    id
+    title
+    filename
+    size
+    mimeType
+    createdDate
+    createdBy
+    content
+  }
+}
+
+query getAll{
+  allMFile {
+    id
+    title
+    filename
+    size
+    mimeType
+    createdDate
+    createdBy
+    content
+  }
+}
+
+mutation createMediaFile($title: String, $filename: String
+		$content: String, $createdBy: String, $mimeType: String,
+    $size: Int){
+  createMFile(title: $title, filename: $filename, content: $content,
+  createdBy: $createdBy, mimeType: $mimeType, size: $size){
+    id
+    title
+    filename
+    createdBy
+    createdDate
+    size
+    mimeType
+    content
+  }
+}
+
+variables
+{
+    "id": "1",
+    "title": "test-1",
+    "filename": "test 1",
+    "createdBy": "chooli",
+    "mimeType": "text/plain",
+    "size": 10000,
+    "content": "test by chooli"
+}

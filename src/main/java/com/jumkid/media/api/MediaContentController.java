@@ -1,4 +1,13 @@
-package com.jumkid.media.controller;
+package com.jumkid.media.api;
+
+/*
+ * This software is written by Jumkid and subject
+ * to a contract between Jumkid and its customer.
+ *
+ * This software stays property of Jumkid unless differing
+ * arrangements between Jumkid and its customer apply.
+ *
+ */
 
 import com.jumkid.media.exception.MediaStoreServiceException;
 import com.jumkid.media.model.MediaFile;
@@ -20,6 +29,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.util.Optional;
 
 /**
  * Created at Oct2018$
@@ -30,7 +40,7 @@ import java.nio.charset.Charset;
 @RequestMapping("/content")
 public class MediaContentController {
 
-    public static final Logger logger = LoggerFactory.getLogger(MediaContentController.class);
+    private static final Logger logger = LoggerFactory.getLogger(MediaContentController.class);
 
     @Autowired
     private MediaFileService fileService;
@@ -41,8 +51,6 @@ public class MediaContentController {
     @GetMapping("/plain/{id}")
     @ResponseBody
     public String getContent(@PathVariable("id") String id){
-        //TODO validate id
-
         Response response = new Response();
         MediaFile mfile = fileService.getMediaFile(id);
         if(mfile!=null){
@@ -63,9 +71,12 @@ public class MediaContentController {
         HttpHeaders responseHeaders = new HttpHeaders();
         FileChannel fc = null;
         try{
-            fc = fileService.getSourceFile(id);
+            Optional<FileChannel> opt = fileService.getSourceFile(id);
+            if (!opt.isPresent()) return null;
+
+            fc = opt.get();
             ByteBuffer buf = ByteBuffer.allocate(1024);
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             while (fc.read(buf) != -1) {
                 buf.flip();
                 sb.append(Charset.defaultCharset().decode(buf));
@@ -102,16 +113,19 @@ public class MediaContentController {
         FileChannel fileChannel = null;
         try {
             MediaFile mfile = fileService.getMediaFile(id);
-            fileChannel = fileService.getSourceFile(id);
-            if(mfile.getMimeType().startsWith("audio") || mfile.getMimeType().startsWith("video")){
+
+            Optional<FileChannel> opt = fileService.getSourceFile(id);
+            if(!opt.isPresent()) {
+                response = responseMFileWriter.write(mfile, null, response);
+            } else if(mfile.getMimeType().startsWith("audio") || mfile.getMimeType().startsWith("video")){
                 response = responseMFileWriter.stream(mfile, fileChannel, request, response);
-            }else{
+            } else {
                 response = responseMFileWriter.write(mfile, fileChannel, response);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally{
+        } finally {
             try{
                 //if(fileChannel!=null) fileChannel.close();
                 response.flushBuffer();

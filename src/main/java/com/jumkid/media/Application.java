@@ -1,12 +1,18 @@
+/*
+ * This software is written by Jumkid and subject
+ * to a contract between Jumkid and its customer.
+ *
+ * This software stays property of Jumkid unless differing
+ * arrangements between Jumkid and its customer apply.
+ *
+ *
+ * (c)2019 Jumkid All rights reserved.
+ *
+ */
 package com.jumkid.media;
 
-import com.jumkid.media.graphql.GraphQLExtensionProvider;
-import com.jumkid.media.graphql.mfile.QueryResolver;
-import graphql.execution.AsyncExecutionStrategy;
-import graphql.execution.ExecutionStrategy;
-import graphql.schema.GraphQLSchema;
+import com.jumkid.media.graphql.GraphQLProvider;
 import graphql.servlet.SimpleGraphQLHttpServlet;
-import io.leangen.graphql.GraphQLSchemaGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +24,6 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.Arrays;
 
-import static graphql.execution.ExecutionId.generate;
 
 /**
  * Main application endpoint with spring boot
@@ -27,39 +32,32 @@ import static graphql.execution.ExecutionId.generate;
  *
  * @author chooliyip
  **/
+
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 
-    public static final Logger logger = LoggerFactory.getLogger(Application.class);
+    private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
+    private GraphQLProvider graphQLProvider;
+
     @Autowired
-    private GraphQLExtensionProvider graphqlExtProvider;
+    public Application(GraphQLProvider graphQLProvider){
+        this.graphQLProvider = graphQLProvider;
+    }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         logger.info("Application started with command-line arguments: {} . \n To kill this application, press Ctrl + C.",
                 Arrays.toString(args));
     }
 
     @Bean
-    GraphQLSchema schema() {
-
-        return new GraphQLSchemaGenerator()
-                .withOperationsFromSingletons(graphqlExtProvider.getExtensions().toArray())
-                .generate();
-    }
-
-    @Bean
     public ServletRegistrationBean servletRegistrationBean() {
-        ExecutionStrategy executionStrategy = new AsyncExecutionStrategy();
-        return new ServletRegistrationBean(SimpleGraphQLHttpServlet.newBuilder(schema()).build(), "/graphql");
+        return new ServletRegistrationBean<>(SimpleGraphQLHttpServlet.newBuilder(graphQLProvider.getGraphQLSchema()).build(), "/graphql");
     }
 
-    public void setGraphqlExtProvider(GraphQLExtensionProvider graphqlExtProvider) {
-        this.graphqlExtProvider = graphqlExtProvider;
-    }
 }

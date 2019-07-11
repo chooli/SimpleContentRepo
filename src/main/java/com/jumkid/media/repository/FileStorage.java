@@ -16,6 +16,7 @@ package com.jumkid.media.repository;
  *
  */
 import java.nio.channels.FileChannel;
+import java.util.Optional;
 
 import com.jumkid.media.exception.MediaStoreServiceException;
 
@@ -26,43 +27,48 @@ public interface FileStorage<T> {
 	 * Persist file in repository
 	 * 
 	 * @param bytes
-	 * @throws Exception
+	 * @param t
 	 */
-	public T saveFile(byte[] bytes, T t) throws MediaStoreServiceException;
+	T saveFile(byte[] bytes, T t);
 
 	/**
 	 * Get file from repository
 	 *
-	 * @param t
-	 * @return
-	 * @throws MediaStoreServiceException
+	 * @param id identity of media
 	 */
-	public FileChannel getFile(T t) throws MediaStoreServiceException;
+	T getFile(String id);
+
+	/**
+	 * Get file from repository
+	 *
+	 * @param id identity of media
+	 * @return FileChannel
+	 * @throws MediaStoreServiceException exception of media storage service
+	 */
+	Optional<byte[]> getSourceFile(String id);
 	
 	/**
-	 * Get file from repository with random accessing
+	 * Get file from repository with the ability of random access
 	 * 
-	 * @param t
-	 * @return
-	 * @throws MediaStoreServiceException
+	 * @param id identity of media
+	 * @throws MediaStoreServiceException exception of media storage service
 	 */
-	public FileChannel getRandomAccessFile(T t) throws MediaStoreServiceException;
+	Optional<FileChannel> getRandomAccessFile(String id);
 
 	/**
 	 * Remove file from storage
 	 *
-	 * @param f
-	 * @throws MediaStoreServiceException
+	 * @param id identity of media
+	 * @throws MediaStoreServiceException exception of media storage service
 	 */
-	public void deleteFile(T f) throws MediaStoreServiceException;
+	boolean deleteFile(String id);
 
 	/**
 	 * Get file thumbnail from repository
 	 *
-	 * @param t
+	 * @param id identity of media
 	 * @param large
-	 * @return
-	 * @throws MediaStoreServiceException
+	 * @throws MediaStoreServiceException exception of media storage service
 	 */
-	public FileChannel getThumbnail(T t, boolean large) throws MediaStoreServiceException;
+	Optional<FileChannel> getThumbnail(String id, boolean large);
 }

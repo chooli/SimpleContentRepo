@@ -13,7 +13,7 @@ public class AppInfo {
 
     private String version;
 
-    private String lastBuild;
+    private String api;
 
     private String description;
 
@@ -33,12 +33,12 @@ public class AppInfo {
         this.version = version;
     }
 
-    public String getLastBuild() {
-        return lastBuild;
+    public String getApi() {
+        return api;
     }
 
-    public void setLastBuild(Date lastUpdated) {
-        this.lastBuild = lastBuild;
+    public void setApi(String api) {
+        this.api = api;
     }
 
     public String getDescription() {

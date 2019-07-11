@@ -46,13 +46,13 @@ public class ResponseMediaFileWriter {
         byte[] buffer = new byte[(int)fc.size()];
         ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
 
-        try{
+        try {
             fc.read(byteBuffer);
             byteBuffer.rewind();
             byteBuffer.flip();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally{
+        } finally {
             fc.close();
         }
         return new String(buffer, Constants.DEFAULT_ENCODING);
@@ -61,7 +61,7 @@ public class ResponseMediaFileWriter {
     public String readTextfile(FileChannel fc) throws IOException{
         StringBuffer sb = new StringBuffer();
         ByteBuffer byteBuffer = ByteBuffer.allocate(DEFAULT_BUFFER_SIZE);
-        try{
+        try {
             while(fc.read(byteBuffer)!=-1){
                 byteBuffer.flip();
                 while (byteBuffer.hasRemaining()){
@@ -69,9 +69,9 @@ public class ResponseMediaFileWriter {
                 }
                 byteBuffer.clear();
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally{
+        } finally {
             fc.close();
         }
         return sb.toString();
@@ -129,14 +129,29 @@ public class ResponseMediaFileWriter {
         response.setHeader("Content-Disposition", "attachment;filename=\"" +fileName+ "\"");
         response.setContentType(mfile.getMimeType());
 
-        try{
-            _write(fc, response);
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-
+        _write(fc, response);
         return response;
 
+    }
+
+    /**
+     * Write source file bytes to response
+     *
+     * @param mfile
+     * @param bytes
+     * @param response
+     * @throws IOException
+     */
+    public void writeForDownload(MediaFile mfile, byte[] bytes,
+                                                HttpServletResponse response) throws IOException{
+        String fileName = (mfile.getFilename()==null ? mfile.getId() : mfile.getFilename());
+
+        response.setHeader("Content-Disposition", "attachment;filename=\"" +fileName+ "\"");
+        response.setContentType(mfile.getMimeType());
+
+        response.getOutputStream().write(bytes);
+        response.getOutputStream().flush();
+        response.getOutputStream().close();
     }
 
     public HttpServletResponse stream(MediaFile mfile, FileChannel fc,

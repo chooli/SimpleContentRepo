@@ -1,0 +1,33 @@
+#schema.graphql
+#scalar Upload
+
+type MFile {
+    id: ID!
+    filename: String
+    title: String
+    mimeType: String
+    size: Int
+    createdDate: String
+    createdBy: String
+    content: String
+    activated: Boolean
+}
+
+type Query {
+    allMFile: [MFile]
+    mfileById(id: ID!): MFile
+}
+
+type Mutation {
+    createMFile(
+        filename: String,
+        title: String,
+        mimeType: String,
+        size: Int,
+        createDate: String,
+        createdBy: String,
+        content: String
+    ): MFile
+
+    deleteMFile(id: ID!): Boolean
+}

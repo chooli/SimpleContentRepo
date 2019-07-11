@@ -1,18 +1,17 @@
 package com.jumkid.media;
 
-import org.elasticsearch.client.Client;
-import org.elasticsearch.client.transport.TransportClient;
+import org.apache.http.HttpHost;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Created at 17 Sep, 2018$
@@ -20,43 +19,39 @@ import java.net.InetAddress;
  * @author chooliyip
  **/
 @Configuration
-@EnableElasticsearchRepositories(basePackages = "com.jumkid.media.repository")
 public class ESConfig {
 
-    @Value("${elasticsearch.host}")
-    private String EsHost;
+    private static final Logger logger = LoggerFactory.getLogger(ESConfig.class);
 
-    @Value("${elasticsearch.port}")
-    private int EsPort;
+    @Value("${elasticsearch.host}")
+    private String esHost;
+
+    @Value("${elasticsearch.port1}")
+    private int esPort1;
+
+    @Value("${elasticsearch.port2}")
+    private int esPort2;
 
     @Value("${elasticsearch.cluster.name}")
-    private String EsClusterName;
+    private String esClusterName;
 
     @Bean
-    public Client client() throws Exception {
+    public RestHighLevelClient esClient(){
 
-        Settings esSettings = Settings.builder()
-                .put("cluster.name", EsClusterName)
-                .build();
+//        Settings esSettings = Settings.builder()
+//                .put("cluster.name", esClusterName)
+//                .build();
 
-        //https://www.elastic.co/guide/en/elasticsearch/guide/current/_transport_client_versus_node_client.html
-        TransportClient client = new PreBuiltTransportClient(esSettings)
-                .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(EsHost), EsPort));
-
-        return client;
+        try {
+            return new RestHighLevelClient(RestClient.builder(
+                    new HttpHost(InetAddress.getByName(esHost), esPort1, "http"),
+                    new HttpHost(InetAddress.getByName(esHost), esPort2, "http")
+                    ));
+        } catch (UnknownHostException uhe) {
+            logger.error("Failed to hock up to elasticsearch host {} ", esHost);
+            return null;
+        }
 
     }
-
-    @Bean
-    public ElasticsearchOperations elasticsearchTemplate() throws Exception {
-        return new ElasticsearchTemplate(client());
-    }
-
-    //Embedded Elasticsearch Server
-    /*@Bean
-    public ElasticsearchOperations elasticsearchTemplate() {
-        return new ElasticsearchTemplate(nodeBuilder().local(true).node().client());
-    }*/
-
 
 }

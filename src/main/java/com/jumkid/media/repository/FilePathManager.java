@@ -20,30 +20,16 @@ package com.jumkid.media.repository;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class FilePathManager {
 
-	private static FilePathManager instance;
+	private final String yyyyMMdd = "yyyy/MM/dd";
 	
-	private final static String yyyyMMdd = "yyyy/MM/dd";
+	private final String yyyyMM = "yyyy/MM";
 	
-	private final static String yyyyMM = "yyyy/MM";
-	
-	private String trashPath = "trash";
-	
-	public FilePathManager(){
-		//void
-	}
-	
-	public static FilePathManager getInstance(){
-		if(instance==null){
-			synchronized(FilePathManager.class){
-				if(instance == null) {
-					instance = new FilePathManager();
-		        }
-			}
-		}
-		return instance;
-	}
+	private final String trashPath = "trash";
 
 	/**
 	 *
@@ -66,8 +52,4 @@ public class FilePathManager {
 		return trashPath;
 	}
 
-	public void setTrashPath(String trashPath) {
-		this.trashPath = trashPath;
-	}
-	
 }
