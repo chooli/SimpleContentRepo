@@ -1,5 +1,5 @@
 # Media Server
-a simple media server provides media streaming resources and services
+a simple media server provides media storage on local file system as well as cloud-based file system. It also provide media accessing API and streaming services
 
 # Get Start
 Please clone or download this project to your local. Say C:/git/media-server
@@ -68,9 +68,9 @@ Please install jdk 1.8 on your local machine. And type to following command to v
    
     java -jar build/libs/media-server-0.9.0.jar
     
-  5. Open a web browser and access the following link
+  5. Open a web browser and access the GraphiQL console
   
-     http://localhost:10080/media/index.html
+     http://localhost:10080/index.html
      
-     From there, you could see a simple introduction and how to use it.
+     From there, you could explor the API which it provides.
 
