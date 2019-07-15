@@ -15,7 +15,7 @@ type MFile {
 
 type Query {
     allMFile: [MFile]
-    mfileById(id: ID!): MFile
+    getMFile(id: ID!): MFile
 }
 
 type Mutation {

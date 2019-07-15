@@ -1,5 +1,14 @@
 package com.jumkid.media.graphql.mfile;
-
+/*
+ * This software is written by Jumkid and subject
+ * to a contract between Jumkid and its customer.
+ *
+ * This software stays property of Jumkid unless differing
+ * arrangements between Jumkid and its customer apply.
+ *
+ *
+ * (c)2019 Jumkid Innovation All rights reserved.
+ */
 import com.jumkid.media.exception.MediaStoreServiceException;
 import com.jumkid.media.model.MediaFile;
 import static com.jumkid.media.model.MediaFile.Fields.*;
@@ -19,7 +28,7 @@ public class MFileMutationDataFetcher {
         this.fileService = fileService;
     }
 
-    public DataFetcher createMFileMutationDataFetcher() {
+    public DataFetcher createMFileMutation() {
         return dataFetchingEnvironment -> {
             MediaFile mfile = new MediaFile.Builder()
                     .title(dataFetchingEnvironment.getArgument(TITLE.value()))
@@ -39,7 +48,7 @@ public class MFileMutationDataFetcher {
         };
     }
 
-    public DataFetcher deleteMFileMutationDataFetcher() {
+    public DataFetcher deleteMFileMutation() {
         return dataFetchingEnvironment -> {
             String id = dataFetchingEnvironment.getArgument(MediaFile.Fields.ID.value());
             try {

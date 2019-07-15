@@ -1,9 +1,17 @@
 package com.jumkid.media;
-
+/*
+ * This software is written by Jumkid and subject
+ * to a contract between Jumkid and its customer.
+ *
+ * This software stays property of Jumkid unless differing
+ * arrangements between Jumkid and its customer apply.
+ *
+ *
+ * (c)2019 Jumkid Innovation All rights reserved.
+ */
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.settings.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

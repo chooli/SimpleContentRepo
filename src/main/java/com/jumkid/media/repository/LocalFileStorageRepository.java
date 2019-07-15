@@ -1,6 +1,6 @@
 package com.jumkid.media.repository;
 
-/* 
+/*
  * This software is written by Jumkid and subject
  * to a contract between Jumkid and its customer.
  *
@@ -8,13 +8,7 @@ package com.jumkid.media.repository;
  * arrangements between Jumkid and its customer apply.
  *
  *
- * (c)2013 Jumkid All rights reserved.
- *
- * VERSION   | DATE      | DEVELOPER  | DESC
- * -----------------------------------------------------------------
- * 3.0        Dec2013      chooli      creation
- * 
- *
+ * (c)2019 Jumkid Innovation All rights reserved.
  */
 
 import java.io.File;
@@ -74,10 +68,8 @@ public class LocalFileStorageRepository {
 	public MediaFile saveFile(byte[] bytes, MediaFile mfile) {
 		
 		if(bytes==null) return null;
-		
-		String daytimePath =  filePathManager.getLogicalPath();
-		String categoryPath = filePathManager.getCategoryPath(mfile.getMimeType());
-		String logicalPath = categoryPath + daytimePath;
+
+		String logicalPath = filePathManager.getFullPath(mfile);
 
 		try{
 			mfile.setLogicalPath(logicalPath);

@@ -8,13 +8,7 @@ package com.jumkid.media.model;
  * arrangements between Jumkid and its customer apply.
  *
  *
- * (c)2013 Jumkid All rights reserved.
- *
- * VERSION   | DATE      | DEVELOPER  | DESC
- * -----------------------------------------------------------------
- * 3.0        Dec2013      chooli      creation
- *
- *
+ * (c)2019 Jumkid Innovation All rights reserved.
  */
 
 import com.jumkid.media.util.Constants;
@@ -34,7 +28,8 @@ public class MediaFile {
 		CREATED_BY("createdBy"),
 		CONTENT("content"),
 		ACTIVATED("activated"),
-		BLOB("blob");
+		BLOB("blob"),
+		LOGICALPATH("logicalPath");
 
 		private final String value;
 
@@ -76,6 +71,7 @@ public class MediaFile {
 		this.createdDate = builder.createdDate;
 		this.createdBy = builder.createdBy;
 		this.content = builder.content;
+		this.logicalPath = builder.logicalPath;
 		this.activated = builder.activated;
 	}
 
@@ -121,9 +117,7 @@ public class MediaFile {
 		return logicalPath;
 	}
 
-	public void setLogicalPath(String logicalPath) {
-		this.logicalPath = logicalPath;
-	}
+	public void setLogicalPath(String logicalPath) { this.logicalPath = logicalPath; }
 
 	public static class Builder{
 
@@ -132,10 +126,11 @@ public class MediaFile {
 		private String mimeType;
 		private Integer size;
 		private String module = Constants.MODULE_MFILE;
-		private Date createdDate = new Date();
+		private Date createdDate;
 		private String createdBy;
 		private String title;
 		private String content;
+		private String logicalPath;
 		private Boolean activated = Boolean.TRUE;
 
 		public MediaFile build() { return new MediaFile(this); }
@@ -150,6 +145,7 @@ public class MediaFile {
 		public Builder title(String val) { title = val; return this; }
 		public Builder content(String val) { content = val; return this; }
 		public Builder activated(Boolean val) { activated = val == null ? activated : val; return this; }
+		public Builder logicalPath(String val) { logicalPath = val; return this; }
 
 	}
 }

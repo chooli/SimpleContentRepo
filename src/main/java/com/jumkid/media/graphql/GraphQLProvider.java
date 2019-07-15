@@ -15,7 +15,6 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import com.jumkid.media.graphql.mfile.MFileDataFetcher;
 import com.jumkid.media.graphql.mfile.MFileMutationDataFetcher;
-import com.jumkid.media.graphql.mfile.SimpleMFileTestFetchers;
 import graphql.GraphQL;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.RuntimeWiring;
@@ -43,16 +42,13 @@ public class GraphQLProvider {
     @Value("${graphql.schema.file}")
     private String schemaFile;
 
-    private SimpleMFileTestFetchers simpleMFileTestFetchers;
-
     private MFileDataFetcher mFileDataFetcher;
 
     private MFileMutationDataFetcher mFileMutationDataFetcher;
 
     @Autowired
-    public GraphQLProvider(SimpleMFileTestFetchers simpleMFileTestFetchers, MFileDataFetcher mFileDataFetcher,
+    public GraphQLProvider(MFileDataFetcher mFileDataFetcher,
                            MFileMutationDataFetcher mFileMutationDataFetcher) {
-        this.simpleMFileTestFetchers = simpleMFileTestFetchers;
         this.mFileDataFetcher = mFileDataFetcher;
         this.mFileMutationDataFetcher = mFileMutationDataFetcher;
     }
@@ -82,12 +78,12 @@ public class GraphQLProvider {
     private RuntimeWiring buildWiring() {
         return RuntimeWiring.newRuntimeWiring()
                 .type(newTypeWiring("Query")
-                        .dataFetcher("allMFile", simpleMFileTestFetchers.getAllMFile())
-                        .dataFetcher("mfileById", mFileDataFetcher.getMFileDataFetcher())
+                        .dataFetcher("allMFile", mFileDataFetcher.allMFile())
+                        .dataFetcher("getMFile", mFileDataFetcher.getMFile())
                 )
                 .type(newTypeWiring("Mutation")
-                        .dataFetcher("createMFile", mFileMutationDataFetcher.createMFileMutationDataFetcher())
-                        .dataFetcher("deleteMFile", mFileMutationDataFetcher.deleteMFileMutationDataFetcher())
+                        .dataFetcher("createMFile", mFileMutationDataFetcher.createMFileMutation())
+                        .dataFetcher("deleteMFile", mFileMutationDataFetcher.deleteMFileMutation())
                 )
                 .build();
     }

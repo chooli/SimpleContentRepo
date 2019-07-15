@@ -7,6 +7,8 @@ package com.jumkid.media.api;
  * This software stays property of Jumkid unless differing
  * arrangements between Jumkid and its customer apply.
  *
+ *
+ * (c)2019 Jumkid Innovation All rights reserved.
  */
 
 import com.jumkid.media.exception.MediaStoreServiceException;
@@ -22,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,22 +34,21 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.util.Optional;
 
-/**
- * Created at Oct2018$
- *
- * @author chooliyip
- **/
 @RestController
 @RequestMapping("/content")
 public class MediaContentController {
 
     private static final Logger logger = LoggerFactory.getLogger(MediaContentController.class);
 
-    @Autowired
     private MediaFileService fileService;
 
-    @Autowired
     private ResponseMediaFileWriter responseMFileWriter;
+
+    @Autowired
+    public MediaContentController(MediaFileService fileService, ResponseMediaFileWriter responseMFileWriter) {
+        this.fileService = fileService;
+        this.responseMFileWriter = responseMFileWriter;
+    }
 
     @GetMapping("/plain/{id}")
     @ResponseBody
@@ -107,6 +109,53 @@ public class MediaContentController {
 
     }
 
+    @PostMapping("/upload")
+    @ResponseBody
+    public Response upload(@RequestParam("file") MultipartFile file, HttpServletRequest httpRequest){
+        Response response = new Response();
+
+        try {
+            String title = httpRequest.getParameter("title");
+            MediaFile mfile = new MediaFile.Builder()
+                    .title(title != null ? title : file.getName())
+                    .filename(file.getOriginalFilename())
+                    .size((int)file.getSize())
+                    .mimeType(file.getContentType())
+                    .build();
+
+            response.setData(fileService.saveMediaFile(mfile, file.getBytes()));
+            response.setTotal(1L);
+
+            logger.debug("media file {} uploaded", mfile.getFilename());
+
+        } catch (IOException ioe) {
+            response.setSuccess(false);
+            response.addError("Fail to get upload file from request");
+        }
+
+        return response;
+    }
+
+    @GetMapping("/download/{id}")
+    @ResponseBody
+    public Response download(@PathVariable("id") String id, HttpServletResponse httpResponse){
+        Response response = new Response();
+
+        Optional opt = fileService.getSourceFile(id);
+        try {
+            if(opt.isPresent()) {
+                MediaFile mfile = fileService.getMediaFile(id);
+                byte[] bytes = (byte[])opt.get();
+                responseMFileWriter.writeForDownload(mfile, bytes, httpResponse);
+            }
+        } catch (IOException ioe) {
+            response.setSuccess(false);
+            response.addError("Fail to get upload file from request");
+        }
+
+        return response;
+    }
+
     @GetMapping(value="/stream/{id}")
     public void stream(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response){
         //TODO valid id
@@ -135,14 +184,6 @@ public class MediaContentController {
             }
         }
 
-    }
-
-    public void setFileService(MediaFileService fileService) {
-        this.fileService = fileService;
-    }
-
-    public void setResponseMFileWriter(ResponseMediaFileWriter responseMFileWriter) {
-        this.responseMFileWriter = responseMFileWriter;
     }
 
 }

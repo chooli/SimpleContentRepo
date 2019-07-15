@@ -7,13 +7,7 @@ package com.jumkid.media.repository;
  * arrangements between Jumkid and its customer apply.
  *
  *
- * (c)2013 Jumkid All rights reserved.
- *
- * VERSION   | DATE      | DEVELOPER  | DESC
- * -----------------------------------------------------------------
- * 3.0        Dec2013      chooli      creation
- * 
- *
+ * (c)2019 Jumkid Innovation All rights reserved.
  */
 import java.nio.channels.FileChannel;
 import java.util.Optional;
@@ -35,17 +29,10 @@ public interface FileStorage<T> {
 	 * Get file from repository
 	 *
 	 * @param id identity of media
-	 */
-	T getFile(String id);
-
-	/**
-	 * Get file from repository
-	 *
-	 * @param id identity of media
 	 * @return FileChannel
 	 * @throws MediaStoreServiceException exception of media storage service
 	 */
-	Optional<byte[]> getSourceFile(String id);
+	Optional<byte[]> getFileBinary(String id);
 	
 	/**
 	 * Get file from repository with the ability of random access
@@ -53,15 +40,15 @@ public interface FileStorage<T> {
 	 * @param id identity of media
 	 * @throws MediaStoreServiceException exception of media storage service
 	 */
-	Optional<FileChannel> getRandomAccessFile(String id);
+	Optional<FileChannel> getFileRandomAccess(String id);
 
 	/**
 	 * Remove file from storage
 	 *
-	 * @param id identity of media
+	 * @param path logical path of media
 	 * @throws MediaStoreServiceException exception of media storage service
 	 */
-	boolean deleteFile(String id);
+	boolean deleteFile(String path);
 
 	/**
 	 * Get file thumbnail from repository
