@@ -13,7 +13,6 @@ package com.jumkid.media.repository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 
 import com.jumkid.media.model.MediaFile;
 import org.springframework.stereotype.Component;
@@ -44,11 +43,14 @@ public class FilePathManager {
 	 * @return file full path
 	 */
 	public String getFullPath(MediaFile mfile) {
-		return this.getCategoryPath(mfile.getMimeType()) + getLogicalPath() + DELIMITER + mfile.getId();
+		if(mfile.getLogicalPath()!=null) {
+			return mfile.getLogicalPath() + DELIMITER + mfile.getId();
+		}
+		return this.getCategoryPath(mfile.getMimeType()) + getDatePath() + DELIMITER + mfile.getId();
 	}
 
-	private String getLogicalPath(){
-		//generate yyyymmdd string for today
+	private String getDatePath(){
+		//generate yyyyMMdd string for today
 		LocalDateTime now = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 		return DELIMITER + now.format(formatter);

@@ -113,6 +113,7 @@ public class ESContentStorageRepository implements FileSearch<MediaFile> {
                     .filename((String)getResponse.getSource().get(FILENAME.value()))
                     .title((String)getResponse.getSource().get(TITLE.value()))
                     .size((Integer)getResponse.getSource().get(SIZE.value()))
+                    .logicalPath((String)getResponse.getSource().get(LOGICALPATH.value()))
                     .build();
         } catch (IOException ioe) {
             logger.error("failed to get media file {} ", ioe.getMessage());

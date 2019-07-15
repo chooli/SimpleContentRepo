@@ -102,7 +102,7 @@ public class MediaContentController {
                 if(fc!=null) fc.close();
             }catch (IOException e){
                 e.printStackTrace();
-                logger.error("failed to handle file resource ", e.getMessage());
+                logger.error("failed to handle file resource {}", e.getMessage());
             }
 
         }
@@ -176,11 +176,10 @@ public class MediaContentController {
             e.printStackTrace();
         } finally {
             try{
-                //if(fileChannel!=null) fileChannel.close();
                 response.flushBuffer();
             }catch(Exception e){
                 e.printStackTrace();
-                logger.error("failed to get file resource ", e.getMessage());
+                logger.error("failed to get file resource {}", e.getMessage());
             }
         }
 

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.jumkid.media.model.MediaFile;
+import com.jumkid.media.repository.FilePathManager;
 import com.jumkid.media.repository.FileSearch;
 import com.jumkid.media.repository.FileStorage;
 import org.slf4j.Logger;
@@ -32,10 +33,14 @@ public class MediaFileServiceImpl implements MediaFileService {
 
 	private FileStorage<MediaFile> fileStorage;
 
+	private FilePathManager filePathManager;
+
 	@Autowired
-	public MediaFileServiceImpl(FileSearch<MediaFile> esContentStorage, FileStorage<MediaFile> hdfsFileStorage) {
-        fileStorage = hdfsFileStorage;
+	public MediaFileServiceImpl(FileSearch<MediaFile> esContentStorage, FileStorage<MediaFile> hdfsFileStorage,
+                                FilePathManager filePathManager) {
+        this.fileStorage = hdfsFileStorage;
 	    this.fileSearch = esContentStorage;
+	    this.filePathManager = filePathManager;
 	}
 
     @Override
@@ -66,22 +71,22 @@ public class MediaFileServiceImpl implements MediaFileService {
     @Override
     public Optional getSourceFile(String id) {
         logger.debug("Retrieve source file by given id {}", id);
-        Optional<byte[]> binary = fileSearch.getBinary(id);
-        if(binary.isPresent()) {
-            return binary;
-        } else {
-            return null;
-        }
+        return fileSearch.getBinary(id);
     }
 
     @Override
     public boolean deleteMediaFile(String id) {
+        MediaFile mfile = this.getMediaFile(id);
+        if(mfile == null) {
+            return false;
+        }
         //remove metadata
 	    if(fileSearch.deleteMetadata(id)) {
-
+            //remove storage
+            return fileStorage.deleteFile(filePathManager.getFullPath(mfile));
         }
 
-	    return true;
+	    return false;
     }
 
     @Override
