@@ -1,5 +1,5 @@
 #schema.graphql
-#scalar Upload
+scalar Date
 
 type MFile {
     id: ID!
@@ -7,7 +7,7 @@ type MFile {
     title: String
     mimeType: String
     size: Int
-    createdDate: String
+    createdDate: Date
     createdBy: String
     content: String
     activated: Boolean
@@ -24,7 +24,7 @@ type Mutation {
         title: String,
         mimeType: String,
         size: Int,
-        createDate: String,
+        createDate: Date,
         createdBy: String,
         content: String
     ): MFile

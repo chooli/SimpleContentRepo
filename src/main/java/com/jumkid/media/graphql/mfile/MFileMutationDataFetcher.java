@@ -18,6 +18,8 @@ import graphql.schema.DataFetcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component
 public class MFileMutationDataFetcher {
 
@@ -36,7 +38,7 @@ public class MFileMutationDataFetcher {
                     .activated(dataFetchingEnvironment.getArgument(ACTIVATED.value()))
                     .content(dataFetchingEnvironment.getArgument(CONTENT.value()))
                     .createdBy(dataFetchingEnvironment.getArgument(CREATED_BY.value()))
-                    .createdDate(dataFetchingEnvironment.getArgument(CREATED_DATE.value()))
+                    .createdDate(new Date())
                     .mimeType(dataFetchingEnvironment.getArgument(MIMETYPE.value()))
                     .size(dataFetchingEnvironment.getArgument(SIZE.value()))
                     .module(dataFetchingEnvironment.getArgument(MODULE.value()))

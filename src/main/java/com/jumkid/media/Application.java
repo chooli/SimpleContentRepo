@@ -1,3 +1,5 @@
+package com.jumkid.media;
+
 /*
  * This software is written by Jumkid and subject
  * to a contract between Jumkid and its customer.
@@ -9,7 +11,6 @@
  * (c)2019 Jumkid All rights reserved.
  *
  */
-package com.jumkid.media;
 
 import com.jumkid.media.graphql.GraphQLProvider;
 import graphql.servlet.SimpleGraphQLHttpServlet;
@@ -21,6 +22,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 
@@ -58,6 +60,11 @@ public class Application implements CommandLineRunner {
     @Bean
     public ServletRegistrationBean servletRegistrationBean() {
         return new ServletRegistrationBean<>(SimpleGraphQLHttpServlet.newBuilder(graphQLProvider.getGraphQLSchema()).build(), "/graphql");
+    }
+
+    @Bean(name = "restTemplate")
+    public RestTemplate restTemplateBean(){
+        return new RestTemplate();
     }
 
 }

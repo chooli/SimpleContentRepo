@@ -7,8 +7,8 @@ type MFile {
     filename: String
     title: String
     mimeType: String
-    size: Intß
-    createdDate: String
+    size: Int
+    createdDate: Date
     createdBy: String
     content: String
 }

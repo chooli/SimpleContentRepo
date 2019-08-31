@@ -15,6 +15,7 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import com.jumkid.media.graphql.mfile.MFileDataFetcher;
 import com.jumkid.media.graphql.mfile.MFileMutationDataFetcher;
+import com.jumkid.media.graphql.type.GraphQLDate;
 import graphql.GraphQL;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.RuntimeWiring;
@@ -85,6 +86,7 @@ public class GraphQLProvider {
                         .dataFetcher("createMFile", mFileMutationDataFetcher.createMFileMutation())
                         .dataFetcher("deleteMFile", mFileMutationDataFetcher.deleteMFileMutation())
                 )
+                .scalar(new GraphQLDate())
                 .build();
     }
 

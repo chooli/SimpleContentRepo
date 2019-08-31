@@ -16,6 +16,7 @@ import com.jumkid.media.exception.MediaStoreServiceException;
 import com.jumkid.media.model.MediaFile;
 import static com.jumkid.media.util.Constants.*;
 
+import com.jumkid.media.util.DateTimeUtils;
 import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -38,6 +39,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 import static com.jumkid.media.model.MediaFile.Fields.*;
@@ -102,10 +105,11 @@ public class ESContentStorageRepository implements FileSearch<MediaFile> {
             if(!getResponse.isExists()) {
                 return null;
             }
+
             return new MediaFile.Builder()
                     .id(getResponse.getId())
                     .createdBy((String)getResponse.getSource().get(CREATED_BY.value()))
-                    //.createdDate((Date)getResponse.getSource().get(CREATED_DATE.value()))
+                    .createdDate(DateTimeUtils.stringToDate((String)getResponse.getSource().get(CREATED_DATE.value())))
                     .mimeType((String)getResponse.getSource().get(MIMETYPE.value()))
                     .module((String)getResponse.getSource().get(MODULE.value()))
                     .content((String)getResponse.getSource().get(CONTENT.value()))
@@ -195,6 +199,7 @@ public class ESContentStorageRepository implements FileSearch<MediaFile> {
                         .filename(sourceMap.get(FILENAME.value()) !=null ? sourceMap.get(FILENAME.value()).toString() : null)
                         .mimeType(sourceMap.get(MIMETYPE.value()) !=null ? sourceMap.get(MIMETYPE.value()).toString() : null)
                         .size(sourceMap.get(SIZE.value()) != null ? (Integer)sourceMap.get(SIZE.value()) : null)
+                        .createdDate(sourceMap.get(CREATED_DATE.value()) != null ? DateTimeUtils.stringToDate(sourceMap.get(CREATED_DATE.value()).toString()) : null)
                         .createdBy(sourceMap.get(CREATED_BY.value()) != null ? sourceMap.get(CREATED_BY.value()).toString() : null)
                         .activated(sourceMap.get(ACTIVATED.value()) != null ? (Boolean) sourceMap.get(ACTIVATED.value()) : Boolean.FALSE)
                         .content(sourceMap.get(CONTENT.value()) !=null ? sourceMap.get(CONTENT.value()).toString() : null)
